@@ -1,0 +1,9 @@
+action_stats:
+  min: [-2.5, -4, -2] # [min_dx, min_dy]
+  max: [5, 4, 2] # [max_dx, max_dy]
+
+ha_vln:
+  metric_waypoint_spacing: 0.16 # average spacing between waypoints (meters)
+
+wohuman_vln:
+  metric_waypoint_spacing: 0.16
