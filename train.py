@@ -188,7 +188,7 @@ def main(args):
     model = DDP(model, device_ids=[device])
     diffusion = create_diffusion(timestep_respacing="")  # default: 1000 steps, linear noise schedule
 
-    diffusion_eval = create_diffusion(timestep_respacing="500") 
+    diffusion_eval = create_diffusion(timestep_respacing="50") 
     logger.info(f"CDiT Parameters: {sum(p.numel() for p in model.parameters()):,}")
 
     # print("[DEBUG] model loaded, structure:")
