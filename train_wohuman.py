@@ -105,7 +105,7 @@ def main(args):
     seed = args.global_seed * dist.get_world_size() + rank
     torch.manual_seed(seed)
     print(f"Starting rank={rank}, seed={seed}, world_size={dist.get_world_size()}.")
-    with open("config/eval_config.yaml", "r") as f:
+    with open("config/eval_config_wohuman.yaml", "r") as f:
         default_config = yaml.safe_load(f)
     config = default_config
     
@@ -188,7 +188,7 @@ def main(args):
     model = DDP(model, device_ids=[device])
     diffusion = create_diffusion(timestep_respacing="")  # default: 1000 steps, linear noise schedule
 
-    diffusion_eval = create_diffusion(timestep_respacing="50") 
+    diffusion_eval = create_diffusion(timestep_respacing="500") 
     logger.info(f"CDiT Parameters: {sum(p.numel() for p in model.parameters()):,}")
 
     # print("[DEBUG] model loaded, structure:")

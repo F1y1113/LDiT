@@ -30,6 +30,6 @@ datasets:
     data_folder: data/ha_vln
     train: data_splits/ha_vln/train # path to train folder with traj_names.txt
     test: data_splits/ha_vln/test # path to test folder with traj_names.txt
-    goals_per_obs: 4
+    goals_per_obs: 2
     instruction_file: data_splits/ha_vln/instructions.json
 

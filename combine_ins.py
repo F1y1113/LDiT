@@ -1,8 +1,8 @@
 import os
 import json
 
-data_dir = "wohuman"  # 根目录
-output_path = "wohuman_instructions.json"
+data_dir = "/datadrive/sdc/yifei/LDiT/data/wohuman_vln"  # 根目录
+output_path = "/datadrive/sdc/yifei/LDiT/data_splits/wohuman_vln/instructions.json"
 
 instruction_dict = {}
 
