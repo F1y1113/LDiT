@@ -50,10 +50,9 @@ def load_image_tensor(path):
     img = Image.open(path).convert('RGB')
     return _transform(img)
 
-# ==== Put only 2 context frames here ====
+# ==== Put only 1 context frames here ====
 image_paths = [
-    "samples/episode_id_00002_2_t/16.jpg",
-    "samples/episode_id_00002_2_t/17.jpg"
+    "samples/episode_id_00002_2_t/16.jpg"
 ]
 obs_images = torch.stack([load_image_tensor(p) for p in image_paths]).unsqueeze(0).to(DEVICE)  # [1, 2, 3, 224, 224]
 

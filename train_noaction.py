@@ -35,7 +35,7 @@ from diffusers.models import AutoencoderKL
 import torchvision
 
 from distributed import init_distributed
-from models import CDiT_models
+from models_noaction import CDiT_models
 from diffusion import create_diffusion
 from datasets import TrainingDataset
 from misc import transform
@@ -188,7 +188,7 @@ def main(args):
     model = DDP(model, device_ids=[device])
     diffusion = create_diffusion(timestep_respacing="")  # default: 1000 steps, linear noise schedule
 
-    diffusion_eval = create_diffusion(timestep_respacing="500") 
+    diffusion_eval = create_diffusion(timestep_respacing="50") 
     logger.info(f"CDiT Parameters: {sum(p.numel() for p in model.parameters()):,}")
 
     # print("[DEBUG] model loaded, structure:")
@@ -283,9 +283,9 @@ def main(args):
         logger.info(f"Beginning epoch {epoch}...")
 
         for x, y, rel_t, instruction in loader:
-            assert y.shape[-1] == 6, f"Expected action dim 6, got {y.shape[-1]}"
+            # assert y.shape[-1] == 6, f"Expected action dim 6, got {y.shape[-1]}"
             x = x.to(device, non_blocking=True)
-            y = y.to(device, non_blocking=True)
+            # y = y.to(device, non_blocking=True)
             rel_t = rel_t.to(device, non_blocking=True)
             
             with torch.amp.autocast('cuda', enabled=bfloat_enable, dtype=torch.bfloat16):
@@ -299,12 +299,12 @@ def main(args):
                 num_goals = T - num_cond
                 x_start = x[:, num_cond:].flatten(0, 1)
                 x_cond = x[:, :num_cond].unsqueeze(1).expand(B, num_goals, num_cond, x.shape[2], x.shape[3], x.shape[4]).flatten(0, 1)
-                y = y.flatten(0, 1)
+                # y = y.flatten(0, 1)
                 rel_t = rel_t.flatten(0, 1)
                 
                 t = torch.randint(0, diffusion.num_timesteps, (x_start.shape[0],), device=device)
                 instruction = sum([[i] * (T - num_cond) for i in instruction], [])
-                model_kwargs = dict(y=y, x_cond=x_cond, rel_t=rel_t, instruction=instruction)
+                model_kwargs = dict(x_cond=x_cond, rel_t=rel_t, instruction=instruction)
                 loss_dict = diffusion.training_losses(model, x_start, t, model_kwargs)
                 loss = loss_dict["loss"].mean()
 
@@ -430,7 +430,7 @@ def evaluate(model, vae, diffusion, test_dataloaders, rank, batch_size, num_work
         if idx >= int(len(loader) * eval_fraction):
             break
 
-        assert y.shape[-1] == 6, f"Expected action dim 6 during evaluation, got {y.shape[-1]}"
+        # assert y.shape[-1] == 6, f"Expected action dim 6 during evaluation, got {y.shape[-1]}"
         x = x.to(device)
         y = y.to(device)
         rel_t = rel_t.to(device).flatten(0, 1)
@@ -442,7 +442,7 @@ def evaluate(model, vae, diffusion, test_dataloaders, rank, batch_size, num_work
 
             samples = model_forward_wrapper(
                 (model, diffusion, vae),
-                x, y,
+                x, None,
                 num_timesteps=None,
                 latent_size=latent_size,
                 device=device,

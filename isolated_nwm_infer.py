@@ -67,7 +67,11 @@ def get_dataset_eval(config, dataset_name, eval_type, predefined_index=True):
 def model_forward_wrapper(all_models, curr_obs, curr_delta, num_timesteps, latent_size, device, num_cond, num_goals=1, rel_t=None, instruction=None, progress=False):
     model, diffusion, vae = all_models
     x = curr_obs.to(device)
-    y = curr_delta.to(device)
+    if curr_delta is not None:
+        y = curr_delta.to(device)
+        y = y.flatten(0, 1)
+    else:
+        y = None
 
     with torch.amp.autocast('cuda', enabled=True, dtype=torch.bfloat16):
         B, T = x.shape[:2]
@@ -82,9 +86,13 @@ def model_forward_wrapper(all_models, curr_obs, curr_delta, num_timesteps, laten
         x = vae.encode(x).latent_dist.sample().mul_(0.18215).unflatten(0, (B, T))
         x_cond = x[:, :num_cond].unsqueeze(1).expand(B, num_goals, num_cond, x.shape[2], x.shape[3], x.shape[4]).flatten(0, 1)
         z = torch.randn(B*num_goals, 4, latent_size, latent_size, device=device)
-        y = y.flatten(0, 1)
+        
         # instruction = sum([[i] * num_goals for i in instruction], [])
-        model_kwargs = dict(y=y, x_cond=x_cond, rel_t=rel_t, instruction=instruction)     
+        if y is not None:
+            model_kwargs = dict(y=y, x_cond=x_cond, rel_t=rel_t, instruction=instruction)
+        else:
+            model_kwargs = dict(x_cond=x_cond, rel_t=rel_t, instruction=instruction)
+
         samples = diffusion.p_sample_loop(
                 model.forward, z.shape, z, clip_denoised=False, model_kwargs=model_kwargs, progress=progress, device=device
         )
