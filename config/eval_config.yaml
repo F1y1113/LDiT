@@ -14,7 +14,7 @@ eval_context_size: 1
 
 eval_datasets:
   ha_vln:
-    data_folder: data/ha_vln
+    data_folder: havln_data/data/ha_vln
     train: data_splits/ha_vln/train # path to train folder with traj_names.txt
     test: data_splits/ha_vln/test # path to test folder with traj_names.txt
     goals_per_obs: 1

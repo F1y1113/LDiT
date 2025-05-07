@@ -14,7 +14,7 @@ eval_context_size: 1
 
 eval_datasets:
   wohuman_vln:
-    data_folder: data/wohuman_vln
+    data_folder: havln_data/data/wohuman_vln
     train: data_splits/wohuman_vln/train # path to train folder with traj_names.txt
     test: data_splits/wohuman_vln/test # path to test folder with traj_names.txt
     goals_per_obs: 1

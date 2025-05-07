@@ -1,0 +1,6 @@
+{
+    "lpips": 0.84375,
+    "dreamsim": 0.8105720281600952,
+    "fid": 375.6128234863281,
+    "dreamsim_model_perceptual_loss": 0.8141593933105469
+}
