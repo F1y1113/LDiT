@@ -1,6 +1,7 @@
 #!/bin/bash
 
-MASTER_PORT=37124
+MASTER_PORT=$(shuf -i 30000-39999 -n 1)
+echo "Using MASTER_PORT: $MASTER_PORT"
 
 NUM_GPUS=8
 
