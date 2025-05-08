@@ -3,7 +3,7 @@
 MASTER_PORT=$(shuf -i 30000-39999 -n 1)
 echo "Using MASTER_PORT: $MASTER_PORT"
 
-NUM_GPUS=8
+NUM_GPUS=4
 
 torchrun --nproc_per_node=$NUM_GPUS --master_port=$MASTER_PORT train_wohuman.py \
     --config config/nwm_cdit_wohuman.yaml \

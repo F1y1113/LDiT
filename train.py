@@ -320,8 +320,7 @@ def main(args):
                 scaler.step(opt)
                 scaler.update()
             
-            if train_steps % args.ema_update_every == 0:
-                update_ema(ema, model.module)
+            update_ema(ema, model.module)
 
             # Log loss values:
             running_loss += loss.detach().item()
@@ -535,7 +534,6 @@ def get_args_parser():
     parser.add_argument("--eval-every", type=int, default=5000)
     parser.add_argument("--bfloat16", type=int, default=1)
     parser.add_argument("--torch-compile", type=int, default=1)
-    parser.add_argument("--ema-update-every", type=int, default=5)
     return parser
 
 if __name__ == "__main__":
