@@ -3,8 +3,8 @@ run_name: nwm_cdit_xl
 # training setup
 results_dir: havln_data/output
 train: True
-batch_size: 8
-num_workers: 12
+batch_size: 4
+num_workers: 8
 model: CDiT-XL/2
 lr: 8e-5
 
